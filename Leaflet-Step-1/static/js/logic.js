@@ -1,21 +1,23 @@
 // Creating map object
 var myMap = L.map("mapid", {
-    center: [37.7749, -122.4194],
-    zoom: 5,
+    center: [37, -119],
+    zoom: 4,
 });
-  
+
 // Adding tile layer
-L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
+var layer = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
     attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
     tileSize: 512,
     maxZoom: 18,
     zoomOffset: -1,
-    id: "mapbox/streets-v11",
+    id: "mapbox/light-v10",
     accessToken: API_KEY
-}).addTo(myMap);
+});
+
+layer.addTo(myMap);
   
 // Use this link to get the geojson data.
-var link = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_week.geojson";
+var link = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson";
 
 // Grabbing our GeoJSON data..
 d3.json(link).then(function(data) {
@@ -44,7 +46,7 @@ d3.json(link).then(function(data) {
             return 1
         }
         else {
-            return mag * 3000
+            return mag * 10000
         }
     }
     // Function for style info
@@ -67,7 +69,7 @@ d3.json(link).then(function(data) {
         pointToLayer: function(feature, latlng) {
             return L.circle(latlng, {
                 radius: cirlceSize(feature.properties.mag),
-                color: circleColors(feature.geometry.coordinates[2]),
+                color: circleColors(feature.geometry.coordinates),
                 fillOpacity: 1
             });
         },
